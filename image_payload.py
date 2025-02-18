@@ -1,3 +1,7 @@
+#POST request format
+#{
+#  "body": "{\"key1\": \"value1\", \"key2\": \"value2\"}"
+#}
 import cv2
 import numpy as np, matplotlib.pyplot as plt, random
 import base64, json
@@ -23,14 +27,35 @@ def image_to_payload(image_path):
     
     return payload
 
-def save_payload_to_file(payload, file_path):
-    # Write the base64 payload to a text file
-    with open(file_path, "w") as file:
-        file.write(payload)
-    print(f"Payload saved to {file_path}")
+def invoke(image_details):
+    url = "https://psilvhbvp5.execute-api.us-east-1.amazonaws.com/endpoint/dev"
 
-# Example usage
-image_path = "C:/Users/USER/Downloads/W.jpg"  # Path to your image file
-payload = image_to_payload(image_path)
-file_path = 'c:/Users/USER/Downloads/image_payload.txt'  # Path to the text file where the payload will be saved
-save_payload_to_file(payload, file_path)
+# Create the inner JSON data
+    inner_data = {
+        "image_data": image_to_payload(image_details)
+    }
+# Create the payload where "body" is a JSON-string of the inner data
+    payload = {
+        "body": json.dumps(inner_data)
+    }
+
+# Convert the entire payload to a JSON string
+    payload_json = json.dumps(payload)
+
+# Define the headers
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+# Send the POST request
+    response = requests.post(url, headers=headers, data=payload_json)
+
+# Print the response
+    #print("Status Code:", response.status_code)
+    data = response.json()
+    
+    #print("Response Body:", data["body"])
+    return data["body"]
+
+print(invoke("C:/Users/USER/Downloads/W.jpg"))
+
