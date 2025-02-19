@@ -1,6 +1,6 @@
 #POST request format
 #{
-#  "body": "{\"key1\": \"value1\", \"key2\": \"value2\"}"
+#  "body": "{\"key1\": \"value1\"}"
 #}
 import cv2
 import numpy as np, matplotlib.pyplot as plt, random
